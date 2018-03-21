@@ -1,0 +1,51 @@
+---
+title: "README.md"
+author: "Philip D. Waggoner"
+date: "3/20/2018"
+output: html_document
+---
+
+# Simple method for addressing mediation effects among independent variables
+
+## Why should I use `purging`?
+
+Though there are some great packages for mediation analysis out there, the simple intuition of its need is often ambiguous, especially for younger graduate students. Thus, this package offers a simple method for "purging" mediaition effects from variables for use in multivariate analysis.
+
+Suppose we are interested in whether committee membership relating to a specific issue domain influences the likelihood of sponsoring related issue-specific legislation. However, in the American context as representational responsibilities permeate legislative behavior, district characteristics in similar employment-related industries likely influence self-selection onto the issue-specific committees in the first place, which we also suggest should influence likelihood of related-issue bill sponsorship. In this context, we have a mediation model, where employment/industry (_indirect_) -> committee membership (_direct_) -> sponsorship. Thus, we would want to purge committee membership of the effects of employment/industry in the district to observe the "pure" effect of committee membership on the likelihood of related sponsorship.
+
+Or consider another example in a different realm. Let's say we expect women's level of labor force participation to impact their contraceptive use, and that the effect of female labor force participation on fertility is indirect, essentially filtered through its impact on contraceptive use. Thus, once we control for contraceptive use, the direct effect of labor force participation should go away. In other words, the effect of labor force participation on fertility is likely indirect and filtered through contraceptive use, which means the variables are also highly correlated.
+
+These two examples offer simple ways of thinking about mediation effects (e.g., labor force (_indirect_) -> contraception (_direct_) -> fertility). If we run into this problem, a simple solution is "purging". The steps in this method are to, first, regress the _direct_ variable (e.g., "contraceptive use") on the _indirect_ variable (e.g., "labor force participation"). Then, store those residuals, which results in the _direct_ effect of contraception after accounting for the _indirect_ effect of labor force participation. Then, we add the stored residuals object as a new "purged variable" in the updated specification. Essentially, this purging process allows for generation of a new _direct_ variable that is uncorrelated with the _indirect_ variable. When we do this, we will see that each variable is explaining unique variance in the DV of interest (you can double check this several ways, such as comparing correlation coefficients or by comparing R^2 across specifications). For a drawn out example, see the code file, `purging.R` using real data from the United Nations Human Development Programme in my GitHub repository, <https://github.com/pdwaggoner/purging>.
+
+## How do I use `purging`?
+
+Researchers should use `purging` if they are concerned of mediation effects on one independent variable as a result of another, when both are included in a single specification. The idea behind the package then, is to generate the new direct-impact variable to be used in the analysis, _purged of the effects of the indirect variable_, simply by inputting the name of the data frame, direct variable, and indirect variable in the function (with the latter two elements in quotation marks). Calling the function will generate a new object (i.e., the variable), which can then be added to a data frame using the `$` operator in R, with the following line of code: `df$purged.var <- purged.var`.
+
+Importantly, the package supports several functional forms, dependent on the mediating variable in question. These forms include linear for continuous data, logit and probit for binary data, and Poisson and negative binomial for event count data, where the functional form should be included after the `purge.` in the command (e.g., `purge.logit`). See the following three examples corresponding with each type of data.
+
+```{r }
+## First, linear/continuous example
+df <- data.frame(A = 1:10, B = 2:11) # create some continuous data
+
+purge.lm(df, "A", "B") # where, df = data frame; A = column name considered as "direct"; and B = column considered as "indirect"
+
+## Second, logit/binary example
+df <- data.frame(A = rep(0:1, 20), B = 1:20) # create some binary response data
+
+purge.logit(df, "A", "B") # same syntax as above; To use the probit iteration, substitute `.logit` for `.probit`.
+
+## Third, Poisson/counts example
+df <- data.frame(A = c(1,1,1,1,1,2,2,2,3,4), B = 1:10) # create some count data
+
+purge.poisson(df, "A", "B") # same syntax as above; To use the negative binomial iteration, substitute `.poisson` for `.negbin`.
+```
+
+## How do I get `purging `?
+
+Though the full package will soon be released on CRAN, you can download the full, yet pre-released version (1.0.0) from my `purging` repository on GitHub, <https://github.com/pdwaggoner/purging>. Check back for updates and the full release at CRAN soon. If you have any questions or find any bugs requiring fixing, please feel free to contact me (see the DESCRIPTION file for more).
+
+## How do I cite `purging`?
+
+As this procedure was first developed and implemented (using the _logit_ iteration discussed above in the first example) in a now-published paper, please cite use of the package as: Waggoner, Philip D. 2018. "Do Constituents Influence Issue-Specific Bill Sponsorship?" _American Politics Research_, <https://doi.org/10.1177/1532673X18759644>
+
+Thanks and enjoy!

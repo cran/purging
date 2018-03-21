@@ -1,0 +1,14 @@
+757465fde1684939d351e9244babff11 *DESCRIPTION
+0bd26872eaeea59b8c2ff21f4adf2862 *LICENSE
+95ec8234cea39dd3e66434d3cce3cb18 *NAMESPACE
+410dc86f4285abee6fe251b0a430ec26 *R/purge.lm.R
+bc7a87beb2cac637f0c1086d8d6fff2f *R/purge.logit.R
+60424464dafda3c9eb92227431b5ad2f *R/purge.negbin.R
+6d117ea5f10c75802af035b2b90409ff *R/purge.poisson.R
+0cdf11cfb7da8d5022d48e0091b34206 *R/purge.probit.R
+3f0b566b63d1a7d49259ae218295a898 *README
+8747d3793f3263b2fe9129477e8dbc42 *man/purge.lm.Rd
+d3a692fe9635db033279d422905dc398 *man/purge.logit.Rd
+0c2ae9a614e340d2f7a5a593a02d246e *man/purge.negbin.Rd
+f7a514803d213aedfb7d58dac5aa03e9 *man/purge.poisson.Rd
+eb694bc840c9a2f8701090b7a9f08611 *man/purge.probit.Rd
